@@ -14,5 +14,5 @@ Basada en [P4-Utils](https://nsg-ethz.github.io/p4-utils/).
 
 - files/controlador_avanzado_plantilla.py -> plantilla de un controlador para el plano de datos creado con avanzado_plantilla.p4
 
-- files/protobuf -> conjunto de ficheros .proto para que Wireshark decodifique tráfico en el plano de control de los conmutadores P4.
+- protobuf/ -> conjunto de ficheros .proto para que Wireshark decodifique tráfico en el plano de control de los conmutadores P4.
  
