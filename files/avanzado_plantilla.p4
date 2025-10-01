@@ -294,9 +294,9 @@ la tabla para encaminar por IP.
 - Si el switch no es el ingress, comprobar si el paquete ha vuelto al
 switch aplicando la tabla correspondiente. Esta comprobación hay que 
 hacerla al final porque, aunque la decisión sea tirar el paquete,
-esa decisión no se implementa inmediantamente, por lo que si hacemos otro
+esa decisión no se implementa inmediatamente, por lo que si hacemos otro
 procesamiento después y resulta en que al paquete se le asigna un reenvío, 
-la decisión de tirar el paquete se pederdería. 
+la decisión de tirar el paquete se perdería. 
 */
 
     /* TAREA: completar bloque apply, se copia las partes de la lógica explicada arriba que hay que implementar */
