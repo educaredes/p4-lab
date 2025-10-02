@@ -3,18 +3,18 @@ from p4utils.utils.sswitch_p4runtime_API import SimpleSwitchP4RuntimeAPI
 
 # The constructor checks if there is a P4 program in the switch. If 
 # there is one, it does not do anything else. If there is not, it 
-# pushes the p4 program in the switch. In any case, the methods in
-# controller allows to control the switch (e.g., modifying tables) 
+# loads the p4 program into the switch. In any case, the methods in
+# the controller object allow to control the switch (e.g., modifying tables) 
 controller = SimpleSwitchP4RuntimeAPI(device_id=1, grpc_port=9559,
                                       p4rt_path='basico_p4rt.txt',
                                       json_path='basico.json')
 
 # If we want to force the modification of a P4 program already in the
-# switch, we need to execute (it uploads the p4 program indicated when
-# the object 'controller' was created):
+# switch, we need to execute the following (it uploads the P4 program 
+# indicated when the object 'controller' was created):
 # controller.reset_state()
 
-# To empty the tables in the switch (if needed). 
+# To empty a table in the switch (if needed). 
 #controller.table_clear('ipv4_lpm')
 
 #Adding entries to the switch tables

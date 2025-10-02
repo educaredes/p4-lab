@@ -19,13 +19,13 @@ header ethernet_t {
 }
 
 
-/* TAREA: Esta es la definición de la cabecera del protocolo
-especificado en el enunciado (TeP4). Hay que rellenar esta cabecera definiendo 
-los campos de la misma según la especificación. Los campos
+/** TAREA: Esta es la definición de la cabecera del protocolo
+especificado en el enunciado (TeP4). Hay que rellenar esta cabecera 
+definiendo los campos de la misma según la especificación. Los campos
 se deben llamar route, reserved, y swt para ser compatibles
 con el resto del código (puede cambiar los nombres, pero entonces
 deberá hacerlo también en los casos correspondientes del código
-proporcionado). */
+proporcionado). **/
 header miheader_t {
 
 
@@ -119,7 +119,7 @@ control MyVerifyChecksum(inout headers hdr, inout metadata meta) {
 *************************************************************************/
 
 /* Todo el procesamiento específico del protocolo TeP4 se va a hacer en
-el Ingress*/ 
+el Ingress. */ 
 control MyIngress(inout headers hdr,
                   inout metadata meta,
                   inout standard_metadata_t standard_metadata) {
@@ -177,24 +177,22 @@ finales conectados al switch */
 
     }
 
-/* Esta acción crea y añade la cabecera del protocolo TeP4. 
-*/
+/* Esta acción crea y añade la cabecera del protocolo TeP4. */
     action add_miheader_header(bit<8> route) {
         hdr.miheader.setValid(); /* con isValid() se puede comprobar si
                                     una cabecera es válida para tenerla 
                                     en el paquete o no */
-        hdr.miheader.route=  /* TAREA: completar */
-        hdr.miheader.swt=    /* TAREA: completar-> dirección MAC por la que se ha recibido el paquete */
+        hdr.miheader.route=  /** TAREA: completar **/
+        hdr.miheader.swt=    /** TAREA: completar-> dirección MAC por la que se ha recibido el paquete **/
         hdr.ethernet.etherType = 0x8847;
     }
 
 /* Esta tabla sirve para añadir la cabecera del protocolo TeP4
-al paquete, rellenando los campos de la misma. El campo ruta dependerá
+al paquete, rellenando los campos de la misma. El campo route dependerá
 del campo de protocolo de la cabecera IP, por lo que la clave de esta 
 tabla debe ser el protocolo de la cabecera IP, de modo que el plano
 de control pueda indicar la ruta deseada para cada protocolo. Esta
-tabla solo se aplicará en el ingress switch.
-*/
+tabla solo se aplicará en el ingress switch. */
     table choose_path {
         key= {
             hdr.ipv4.protocol: exact;      
@@ -207,11 +205,10 @@ tabla solo se aplicará en el ingress switch.
     }
 
 /* Esta tabla comprueba si la MAC incluida en la cabecera TeP4 del paquete 
-es la MAC de alguna de las interfaces con sistemas finales en este switch. 
-Si es así, hay que tirar el paquete (esta tabla solo se aplicará si el
-switch no es el ingress). La tabla será rellenada por el plano de control
-con las MACs de las interfaces correspondientes. 
-*/
+(campo swt) es la MAC de alguna de las interfaces hacia sistemas finales en 
+este switch. Si es así, hay que tirar el paquete (esta tabla solo se aplicará 
+si el switch no es el ingress). La tabla será rellenada por el plano de control
+con las MACs de las interfaces correspondientes. */
     table check_is_back {
         key = {
             hdr.miheader.swt: exact;
@@ -232,13 +229,14 @@ TeP4 (se aplicará cuando lo indique la tabla miheader_tbl). */
         standard_metadata.egress_spec = port;
     }
 
-/* TAREA: Completar esta tabla que se usa para el reenvío en base al 
-campo route de la cabecera TeP4. La clave será el campo route de nuestro 
-protocolo. El match hará que se aplique la acción miheader_forward que define
+/** TAREA: Completar esta tabla que se usa para el reenvío en base al 
+campo route de la cabecera TeP4. La clave será el campo route de TeP4. 
+El match hará que se aplique la acción miheader_forward que define
 cómo se reenvía el paquete. Si no hay match, se tira el paquete.
-El plano de control rellenará esta tabla con, dada una ruta, la MAC destino y el puerto 
-(parámetros de la acción miheader_forward) que hay que aplicar para el reenvío por esa 
-ruta (definida por el valor del campo route del paquete).*/
+El plano de control rellenará esta tabla con, dada una ruta (definida 
+por el valor del campo route del paquete), la MAC destino y el puerto 
+(parámetros de la acción miheader_forward) que hay que aplicar para el 
+reenvío por esa ruta. **/
     table miheader_tbl {
         key = {
             
@@ -258,7 +256,7 @@ ruta (definida por el valor del campo route del paquete).*/
     } 
 
 /* Reenvío por cabecera IP que solo usaremos para reenviar a 
-sistemas finales */
+sistemas finales. */
     table ipv4_lpm {
         key = {
             hdr.ipv4.dstAddr: lpm;
@@ -288,7 +286,7 @@ la cabecera del protocolo TeP4.
 - Si existe la cabecera TeP4 (la cabecera es válida),
 aplicar la tabla para encaminar por TeP4.
 
-- Si no existe la cabecera de TeP4 (no es válida), aplicar
+- Si no existe la cabecera TeP4 (no es válida), aplicar
 la tabla para encaminar por IP.
 
 - Si el switch no es el ingress, comprobar si el paquete ha vuelto al
@@ -296,10 +294,9 @@ switch aplicando la tabla correspondiente. Esta comprobación hay que
 hacerla al final porque, aunque la decisión sea tirar el paquete,
 esa decisión no se implementa inmediatamente, por lo que si hacemos otro
 procesamiento después y resulta en que al paquete se le asigna un reenvío, 
-la decisión de tirar el paquete se perdería. 
-*/
+la decisión de tirar el paquete se perdería. */
 
-    /* TAREA: completar bloque apply, se copia las partes de la lógica explicada arriba que hay que implementar */
+    /** TAREA: completar bloque apply, se copian las partes de la lógica explicada arriba que hay que implementar. **/
     apply {
        
        check_is_ingress_border.apply();
@@ -313,10 +310,10 @@ la decisión de tirar el paquete se perdería.
        }
 
        /** TAREA: añadir código para: 
-                 - Si existe la cabecera de nuestro protocolo (la cabecera es válida), aplicar la tabla 
-                   para encaminar por nuestro protocolo.
+                 - Si existe la cabecera TeP4 (la cabecera es válida), aplicar la tabla 
+                   para encaminar por TeP4.
 
-                 - Else: Si no existe la cabecera de nuestro protocolo (no es válida), aplicar
+                 - Else: Si no existe la cabecera TeP4 (no es válida), aplicar
                    la tabla para encaminar por IP.
        **/
 
@@ -372,7 +369,7 @@ control MyDeparser(packet_out packet, in headers hdr) {
 /* Se reconstruye el paquete para su envío, para lo que se le añaden las 
 cabeceras. El método .emit solo añadirá una cabecera si es válida, 
 cualquier cabecera que el procesamiento haya declarado inválida, 
-no será añadida al paquete */        
+no será añadida al paquete. */        
         packet.emit(hdr.ethernet);
         packet.emit(hdr.miheader);
         packet.emit(hdr.ipv4);

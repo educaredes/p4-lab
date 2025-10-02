@@ -11,8 +11,7 @@ controller = SimpleSwitchP4RuntimeAPI(device_id=1, grpc_port=9559,
 # TAREA: rellenar entradas en todas las tablas del switch según
 # indicaciones posteriores. 
 
-# Añadimos entradas a las tablas del switch
-# formato:
+# Añadimos entradas a las tablas del switch con formato:
 # controller.table_add('nombre_tabla', 'nombre_acción_a_ejecutar_si_match', ['valor de key que hace match', ...], ['salida de la entrada si hace match, que será parámetro de entrada para la acción', ...])
 
 # Entradas en la tabla para comprobar si el switch es ingress switch, los 
@@ -52,7 +51,7 @@ controller.table_add('miheader_tbl', '', [''], ['',''])
 # valores de key que harán match serán prefijos que incluyan las 
 # direcciones de los sistemas finales conectados al switch. La salida
 # es la dirección MAC del siguiente salto (el sistema final) y el puerto
-# de salida del switch hacia el sistema final
+# de salida del switch hacia el sistema final.
 controller.table_add('ipv4_lpm', '',[''], ['',''])
 
 
